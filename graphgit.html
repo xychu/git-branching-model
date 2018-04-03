@@ -1,0 +1,58 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gitgraph.js/1.11.4/gitgraph.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/gitgraph.js/1.11.4/gitgraph.min.css" />
+
+<canvas id="gitGraph"></canvas>
+
+
+<script type="text/javascript">
+
+var gitgraph = new GitGraph({
+      template: "blackarrow",
+      reverseArrow: false,
+      orientation: "horizontal",
+      elementId: "gitGraph",
+      mode: "compact"
+});
+
+var memaster = gitgraph.branch({
+  name: "master",
+  showLabel: true
+}).commit({
+  message: "release version v1.0",
+  tag: "v1.0"
+}).commit().commit();
+
+var medevelop = gitgraph.branch({
+  name: "release",
+  showLabel: true
+}).commit({
+  message: "release version v1.1 release candidate",
+  tag: "v1.1-rc"
+});
+
+var hotfix = gitgraph.branch({
+  name: "hotfix",
+  parentBranch: memaster,
+  showLabel: true
+}).commit({
+  message: "hotfix of release v1.0",
+  tag: "v1.0-hotfix"
+});
+
+hotfix.commit();
+hotfix.commit({
+  message: "hotfix release version v1.0",
+  tag: "v1.0-hotfix"
+});
+memaster.commit();
+hotfix.merge(memaster);
+
+memaster.commit().commit();
+medevelop.commit().commit();
+medevelop.commit({
+  message: "release version v1.1",
+  tag: "v1.1"
+});
+medevelop.merge(memaster);
+</script>
